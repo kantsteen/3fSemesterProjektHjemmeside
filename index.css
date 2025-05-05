@@ -1,1 +1,11 @@
-#map { height: 400px; width:75%; }
+#map { height: 500px; width:75%; }
+
+
+  .custom-navbar {
+    padding-top: 0.25rem;  /* reduce top padding */
+    padding-bottom: 0.25rem;  /* reduce bottom padding */
+  }
+
+  .custom-brand {
+    font-size: 28px;  /* increase text size */
+  }
