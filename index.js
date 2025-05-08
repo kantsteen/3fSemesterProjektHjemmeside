@@ -62,7 +62,7 @@ Vue.createApp({
                     <th scope="row">${loc.id}</th>
                     <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
                     <td>${loc.latitude.toFixed(5)}</td>
-                    <td>${loc.longtitude.toFixed(5)}</td>
+                    <td>${loc.longitude.toFixed(5)}</td>
                     <td>${loc.speedKnots.toFixed(1)}</td>
 
                 `;
