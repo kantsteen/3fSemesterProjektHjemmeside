@@ -1,5 +1,5 @@
 [
-    { "id": 3, "timestamp": "2025-05-08T10:18:00", "latitude": 55.6775, "longitude": 12.5681, "speed_knots": 0.6 },
-    { "id": 2, "timestamp": "2025-05-08T10:17:00", "latitude": 55.6772, "longitude": 12.5685, "speed_knots": 1.7 },
-    { "id": 1, "timestamp": "2025-05-08T10:16:00", "latitude": 55.6769, "longitude": 12.5689, "speed_knots": 2.0 }
+    { "id": 1, "timestamp": "2025-05-08T10:16:00", "latitude": 55.6775, "longitude": 12.5681, "speed_knots": 0.6 },
+    { "id": 1, "timestamp": "2025-05-08T10:17:00", "latitude": 55.6772, "longitude": 12.5685, "speed_knots": 1.7 },
+    { "id": 1, "timestamp": "2025-05-08T10:18:00", "latitude": 55.6769, "longitude": 12.5689, "speed_knots": 2.0 }
   ]
