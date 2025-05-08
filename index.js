@@ -22,15 +22,15 @@ Vue.createApp({
             try {
                 const response = await fetch('mockdata.json'); // Rettes til vores rigtige endpoint
                 const data = await response.json();
-                this.locations = data.reverse(); // vis nyeste øverst
+                this.locations = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sorter efter timestamp
 
                 // Fjern gamle markører
                 this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
                 this.oldMarkers = [];
 
-                const limitedData = data.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
+                const limitedData = this.locations.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
 
-                data.forEach((loc, index) => {
+                limitedData.forEach((loc, index) => {
                     const opacity = 0.7 - (index * 0.07); // Ændrer opacitet for ældre markører
                     const marker = L.circleMarker([loc.latitude, loc.longitude], {
                         radius: 6,
@@ -54,7 +54,9 @@ Vue.createApp({
             const tbody = document.querySelector('tbody');
             tbody.innerHTML = '';
 
-            this.locations.forEach((loc, index) => {
+            const limitedLocations = this.locations.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
+
+            limitedLocations.forEach((loc, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
