@@ -24,11 +24,11 @@ Vue.createApp({
                 const data = await response.json();
                 this.locations = data.reverse(); // vis nyeste øverst
 
-                // Fjern gamle markører, hvor mange er nødvendige?
+                // Fjern gamle markører
                 this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
                 this.oldMarkers = [];
 
-                const limitedData = data.slice(0, 10); // Begræns til de seneste 10 lokationer
+                const limitedData = data.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
 
                 data.forEach((loc, index) => {
                     const opacity = 0.7 - (index * 0.07); // Ændrer opacitet for ældre markører
