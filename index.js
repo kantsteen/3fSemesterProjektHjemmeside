@@ -28,11 +28,14 @@ Vue.createApp({
                 this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
                 this.oldMarkers = [];
 
+                const limitedData = data.slice(0, 10); // Begræns til de seneste 10 lokationer
+
                 data.forEach((loc, index) => {
+                    const opacity = 0.7 - (index * 0.07); // Ændrer opacitet for ældre markører
                     const marker = L.circleMarker([loc.latitude, loc.longitude], {
                         radius: 6,
                         color: index === 0 ? 'red' : 'gray', // nyeste = rød, andre = grå
-                        fillOpacity: 0.7
+                        fillOpacity: 0.7 === 0 ? 0.7 : Math.max(opacity, 0.1) // mindst 0.1
                     }).addTo(this.map);
 
                     if (index > 0) this.oldMarkers.push(marker);
