@@ -20,7 +20,7 @@ Vue.createApp({
     methods: {
         async fetchLocations() {
             try {
-                const response = await fetch('mockdata.json'); // Rettes til vores rigtige endpoint
+                const response = await fetch('https://restredning20250504122455.azurewebsites.net/api/GPS'); // Rettes til vores rigtige endpoint
                 const data = await response.json();
                 this.locations = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sorter efter timestamp
 
@@ -61,9 +61,9 @@ Vue.createApp({
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
                     <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
-                    <td>${loc.longitude.toFixed(5)}</td>
                     <td>${loc.latitude.toFixed(5)}</td>
-                    <td>${loc.speed_knots.toFixed(1)}</td>
+                    <td>${loc.longtitude.toFixed(5)}</td>
+                    <td>${loc.speedKnots.toFixed(1)}</td>
 
                 `;
                 tbody.appendChild(row);
