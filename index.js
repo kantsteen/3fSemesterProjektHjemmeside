@@ -15,7 +15,7 @@ Vue.createApp({
         }).addTo(this.map);
 
         this.fetchLocations();
-        setInterval(this.fetchLocations, 10000);
+        setInterval(this.fetchLocations, 30000); // Opdaterer hvert 30. sekund, kunde valgt
     },
     methods: {
         async fetchLocations() {
