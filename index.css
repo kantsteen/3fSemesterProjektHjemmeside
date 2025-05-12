@@ -9,3 +9,7 @@
   .custom-brand {
     font-size: 28px;  /* increase text size */
   }
+
+  .smaller-text {
+    font-size: 1.2rem; /* Adjust as needed */
+}

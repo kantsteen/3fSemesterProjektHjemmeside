@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,51 +12,17 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="index.css">
     <title>3fSemesterProjekt</title>
-
 </head>
-
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-light custom-navbar">
-            <a class="navbar-brand custom-brand" href="#">Coast</a>
-        </nav>
+    <nav class="navbar navbar-expand-md navbar-light bg-light custom-navbar">
+        <a class="navbar-brand custom-brand ms-3" href="#">Coast</a>
+        <a class="navbar-brand custom-brand smaller-text ms-3" href="oversigt.html">Oversigt</a>
+    </nav>
 
-
-        <div class="container">
-            <div class="row">
-
-                <div class="col-8"> KORT
-                    <div id="map"></div>
-                </div>
-
-                <div class="col-4"> VÆRDIER
-                    <table class="table table-striped table-bordered w-100 border text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Tid</th>
-                                <th scope="col">Længdegrad</th>
-                                <th scope="col">Breddegrad</th>
-                                <th scope="col">Knot</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-
+    <div class="container text-center mt-5">
+        <h1>Velkommen til Coast</h1>
+        <p class="lead">Et hurtigt overblik over livsvigtige data fra havet.</p>
+        <a class="btn btn-primary" href="oversigt.html">Gå til oversigten</a>
     </div>
-
-
-
-
-
-    <script src="index.js"></script>
 </body>
-
-
-
 </html>
