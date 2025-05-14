@@ -2,11 +2,26 @@ Vue.createApp({
     data() {
         return {
             map: null,
-            latestMarker: null,
-            oldMarkers: [],
-            shownLocations: [],
-            lastTimestamp: null,
-            userLocationMarker: null
+            markers: [],
+            locations: [
+                { "id": 1, "timestamp": "2025-05-08T10:18:00", "latitude": 55.6775, "longitude": 12.5681, "speedKnots": 0.6 },
+                { "id": 1, "timestamp": "2025-05-08T10:17:00", "latitude": 55.6772, "longitude": 12.5685, "speedKnots": 1.7 },
+                { "id": 1, "timestamp": "2025-05-08T10:16:00", "latitude": 55.6769, "longitude": 12.5689, "speedKnots": 2.0 },
+                { "id": 1, "timestamp": "2025-05-08T10:19:00", "latitude": 55.6298, "longitude": 12.0771, "speedKnots": 1.0 },
+                { "id": 1, "timestamp": "2025-05-08T10:15:00", "latitude": 55.6765, "longitude": 12.5693, "speedKnots": 1.2 },
+                { "id": 1, "timestamp": "2025-05-08T10:14:00", "latitude": 55.6762, "longitude": 12.5697, "speedKnots": 0.8 },
+                { "id": 1, "timestamp": "2025-05-08T10:13:00", "latitude": 55.6759, "longitude": 12.5701, "speedKnots": 1.5 },
+                { "id": 1, "timestamp": "2025-05-08T10:12:00", "latitude": 55.6756, "longitude": 12.5705, "speedKnots": 2.3 },
+                { "id": 1, "timestamp": "2025-05-08T10:11:00", "latitude": 55.6753, "longitude": 12.5709, "speedKnots": 1.0 },
+                { "id": 1, "timestamp": "2025-05-08T10:10:00", "latitude": 55.6750, "longitude": 12.5713, "speedKnots": 0.9 },
+                { "id": 1, "timestamp": "2025-05-08T10:09:00", "latitude": 55.6747, "longitude": 12.5717, "speedKnots": 1.8 },
+                { "id": 1, "timestamp": "2025-05-08T10:08:00", "latitude": 55.6747, "longitude": 12.5717, "speedKnots": 1.8 },
+                { "id": 1, "timestamp": "2025-05-08T10:07:00", "latitude": 55.6747, "longitude": 12.5717, "speedKnots": 1.8 }
+            ],
+            displayedLocations: [],
+            userLocationMarker: null,
+            fetchInterval: null,
+            maxLocations: 10 // Maximum number of locations to display
         };
     },
     mounted() {
@@ -16,74 +31,89 @@ Vue.createApp({
             attribution: '© OpenStreetMap contributors'
         }).addTo(this.map);
 
-        this.fetchNextLocation(); // Fetch first location
-        setInterval(this.fetchNextLocation, 3000); // Then fetch every 30 seconds
-
+        // Sort locations by timestamp (newest first)
+        this.locations = this.locations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Display the first location immediately
+        this.addNextLocation();
+        
+        // Start the interval to add one location every 30 seconds
+        this.startProgressiveDisplay();
+        
         this.getUserLocation();
     },
     methods: {
-        async fetchNextLocation() {
-            try {
-                const response = await fetch(mockdata.json);
-                const data = await response.json();
-                if (!data || data.length === 0) return;
-
-                // Get latest location by timestamp
-                const latest = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
-
-                // Skip if same as last shown
-                if (this.lastTimestamp === latest.timestamp) return;
-                this.lastTimestamp = latest.timestamp;
-
-                // Add new location at the beginning
-                this.shownLocations.unshift(latest);
-
-                // Limit to 10 most recent
-                if (this.shownLocations.length > 10) {
-                    this.shownLocations.pop();
-                }
-
-                this.updateMap();
+        
+        startProgressiveDisplay() {
+            // Clear any existing interval
+            if (this.fetchInterval) {
+                clearInterval(this.fetchInterval);
+            }
+            
+            // Add a new location every 30 seconds
+            this.fetchInterval = setInterval(() => {
+                this.addNextLocation();
+            }, 30000);
+        },
+        
+        addNextLocation() {
+            // If we already have the maximum number of locations displayed, do nothing
+            if (this.displayedLocations.length >= this.maxLocations) {
+                return;
+            }
+            
+            // Get the next location to display
+            const nextIndex = this.displayedLocations.length;
+            if (nextIndex < this.locations.length) {
+                const nextLocation = this.locations[nextIndex];
+                this.displayedLocations.push(nextLocation);
+                
+                // Add marker for this location
+                this.addMarkerForLocation(nextLocation, nextIndex);
+                
+                // Update the displayed locations table
                 this.updateTable();
-            } catch (error) {
-                console.error('Fejl ved hentning af GPS-data:', error);
+                
+                // If this is the first location, center the map on it
+                if (nextIndex === 0) {
+                    this.map.setView([nextLocation.latitude, nextLocation.longitude], 13);
+                }
+                
+                // If we've reached the maximum, clear the interval
+                if (this.displayedLocations.length >= this.maxLocations) {
+                    clearInterval(this.fetchInterval);
+                    console.log('Reached maximum number of locations. Stopping interval.');
+                }
             }
         },
-
-        updateMap() {
-            // Remove all existing markers
-            this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
-            this.oldMarkers = [];
-
-            this.shownLocations.forEach((loc, index) => {
-                const opacity = 0.7 - index * 0.07;
-                const marker = L.circleMarker([loc.latitude, loc.longitude], {
-                    radius: 6,
-                    color: index === 0 ? 'red' : 'gray',
-                    fillOpacity: Math.max(opacity, 0.1)
-                }).addTo(this.map);
-
-                if (index === 0) {
-                    this.latestMarker = marker;
-                    this.map.setView([loc.latitude, loc.longitude], 13);
-                } else {
-                    this.oldMarkers.push(marker);
-                }
-            });
+        
+        addMarkerForLocation(loc, index) {
+            // Calculate opacity based on position (newest = most opaque)
+            const opacity = 0.7 - (index * 0.07);
+            
+            // Create the marker
+            const marker = L.circleMarker([loc.latitude, loc.longitude], {
+                radius: 6,
+                color: index === 0 ? 'red' : 'gray', // newest = red, others = gray
+                fillOpacity: index === 0 ? 0.7 : Math.max(opacity, 0.1) // minimum opacity of 0.1
+            }).addTo(this.map);
+            
+            // Add to our markers array
+            this.markers.push(marker);
         },
-
+        
         updateTable() {
             const tbody = document.querySelector('tbody');
             tbody.innerHTML = '';
 
-            this.shownLocations.forEach(loc => {
+            this.displayedLocations.forEach((loc, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
                     <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
                     <td>${loc.latitude.toFixed(5)}</td>
                     <td>${loc.longitude.toFixed(5)}</td>
-                    <td>${loc.speedKnots?.toFixed(1) ?? '-'}</td>
+                    <td>${loc.speedKnots.toFixed(1)}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -91,6 +121,8 @@ Vue.createApp({
 
         getUserLocation() {
             if ('geolocation' in navigator) {
+                console.log('Geolocation is available');
+                // Request current position
                 navigator.geolocation.getCurrentPosition(
                     this.geolocationSuccess,
                     this.geolocationError,
@@ -104,7 +136,11 @@ Vue.createApp({
         geolocationSuccess(position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
 
+            console.log(`User Location: Lat ${lat}, Lon ${lng}, Accuracy ${accuracy} meters`);
+
+            // Remove previous user marker if it exists
             if (this.userLocationMarker) {
                 this.map.removeLayer(this.userLocationMarker);
             }
@@ -116,8 +152,8 @@ Vue.createApp({
                 fillOpacity: 0.3,
                 weight: 2
             }).addTo(this.map)
-              .bindPopup(`Your Location`)
-              .openPopup();
+                .bindPopup(`Your Location`)
+                .openPopup();
         },
 
         geolocationError(error) {
@@ -132,10 +168,11 @@ Vue.createApp({
                 case error.TIMEOUT:
                     message += 'The request to get user location timed out.';
                     break;
-                default:
+                case error.UNKNOWN_ERROR:
                     message += 'An unknown error occurred.';
+                    break;
             }
-            console.error(message);
-        }
+            console.error(message, error);
+        }    
     }
 }).mount('#app');
