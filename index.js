@@ -90,7 +90,6 @@ Vue.createApp({
         geolocationSuccess(position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            const accuracy = position.coords.accuracy; // Accuracy in meters
 
             console.log('User Location: Lat ${lat}, Lon ${lng}, Accuracy ${accuracy} meters')
 
