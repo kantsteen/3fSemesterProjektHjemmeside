@@ -21,7 +21,8 @@ Vue.createApp({
             displayedLocations: [],
             userLocationMarker: null,
             fetchInterval: null,
-            maxLocations: 10 // Maximum number of locations to display
+            maxLocations: 10, // Maximum number of locations to display
+            currentIndex: 0    // Track which location we're currently on
         };
     },
     mounted() {
@@ -43,48 +44,57 @@ Vue.createApp({
         this.getUserLocation();
     },
     methods: {
-        
         startProgressiveDisplay() {
             // Clear any existing interval
             if (this.fetchInterval) {
                 clearInterval(this.fetchInterval);
             }
             
-            // Add a new location every 30 seconds
+            // Add a new location every 30 seconds (3000ms used here for testing, change to 30000 for real use)
             this.fetchInterval = setInterval(() => {
                 this.addNextLocation();
-            }, 30000);
+            }, 3000);
         },
         
         addNextLocation() {
-            // If we already have the maximum number of locations displayed, do nothing
-            if (this.displayedLocations.length >= this.maxLocations) {
+            // If we've gone through all locations, stop the interval
+            if (this.currentIndex >= this.locations.length) {
+                clearInterval(this.fetchInterval);
+                console.log('All locations have been displayed. Stopping interval.');
                 return;
             }
             
-            // Get the next location to display
-            const nextIndex = this.displayedLocations.length;
-            if (nextIndex < this.locations.length) {
-                const nextLocation = this.locations[nextIndex];
-                this.displayedLocations.push(nextLocation);
-                
-                // Add marker for this location
-                this.addMarkerForLocation(nextLocation, nextIndex);
-                
-                // Update the displayed locations table
-                this.updateTable();
-                
-                // If this is the first location, center the map on it
-                if (nextIndex === 0) {
-                    this.map.setView([nextLocation.latitude, nextLocation.longitude], 13);
-                }
-                
-                // If we've reached the maximum, clear the interval
-                if (this.displayedLocations.length >= this.maxLocations) {
-                    clearInterval(this.fetchInterval);
-                    console.log('Reached maximum number of locations. Stopping interval.');
-                }
+            // Get the next location to display (newest is first in the sorted array)
+            const nextLocation = this.locations[this.currentIndex];
+            this.currentIndex++;
+            
+            // Add the new location at the beginning of the array (top of the list)
+            this.displayedLocations.unshift(nextLocation);
+            
+            // If we have more than maxLocations, remove the oldest (last in array)
+            if (this.displayedLocations.length > this.maxLocations) {
+                this.displayedLocations.pop();
             }
+            
+            // Clear all existing markers and redraw them
+            this.updateMarkers();
+            
+            // Update the displayed locations table
+            this.updateTable();
+            
+            // Center the map on the newest location
+            this.map.setView([nextLocation.latitude, nextLocation.longitude], 13);
+        },
+        
+        updateMarkers() {
+            // Remove all existing markers
+            this.markers.forEach(marker => this.map.removeLayer(marker));
+            this.markers = [];
+            
+            // Add new markers for all current locations
+            this.displayedLocations.forEach((loc, index) => {
+                this.addMarkerForLocation(loc, index);
+            });
         },
         
         addMarkerForLocation(loc, index) {
