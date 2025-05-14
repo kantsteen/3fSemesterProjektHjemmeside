@@ -60,19 +60,6 @@ Vue.createApp({
             const limitedLocations = this.locations.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
 
             limitedLocations.forEach((loc, index) => {
-<<<<<<< HEAD
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <th scope="row">${loc.id}</th>
-        <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
-        <td>${loc.latitude.toFixed(5)}</td>
-        <td>${loc.longitude.toFixed(5)}</td>
-        <td>${loc.speedKnots.toFixed(1)}</td>
-    `;
-    tbody.appendChild(row);
-});
-        }
-=======
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
@@ -140,6 +127,5 @@ Vue.createApp({
             }
             console.error(message, error);
         }    
->>>>>>> 1061e393a945f1ab3ccfdabb224cda51fa8530bd
     }
 }).mount('#app');
