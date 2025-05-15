@@ -40,7 +40,7 @@ const app = Vue.createApp({
             }
         },
         initializeMap() {
-            this.map = L.map("map").setView([55.6, 12.5], 7);
+            this.map = L.map("map").setView([56.0, 11.5], 7);
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(this.map);
