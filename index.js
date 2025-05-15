@@ -8,7 +8,9 @@ Vue.createApp({
             userLocationMarker: null,
             buffer: [],
             fetchIntervalId: null,
-            displayIntervalId: null
+            displayIntervalId: null,
+            selectedMarker: null,
+            id: null
         };
     },
     mounted() {
@@ -22,7 +24,7 @@ Vue.createApp({
         this.fetchIntervalId = setInterval(this.bufferFetchLocation, 5000);
 
         // Display newest fetched location every 30 seconds
-        this.displayIntervalId = setInterval(this.displayLatestBufferedLocation, 30000)
+        this.displayIntervalId = setInterval(this.displayLatestBufferedLocation, 1000)
 
         this.getUserLocation();
     },
@@ -38,7 +40,10 @@ Vue.createApp({
 
                 const latest = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
                 if (latest) {
-                    this.buffer.push(latest)
+                    
+                latest.id = `${latest.timestamp}`;
+                    
+                this.buffer.push(latest)
                 }
             } catch (error) {
                 console.error('Fejl ved hentning af lokationer:', error);
@@ -65,7 +70,11 @@ Vue.createApp({
                     radius: 6,
                     color: index === 0 ? 'red' : 'gray',
                     fillOpacity: index === 0 ? 0.7 : 0.4
-                }).addTo(this.map);
+                }).addTo(this.map).bindPopup(`Id: ${loc.id}<br>Time: ${new Date(loc.timestamp).toLocaleTimeString()}`)
+                .on('click', () => {
+                    this.markerId = loc.id;
+                    this.updateTable();
+                });
 
                 if (index === 0) {
                     this.latestMarker = marker;
@@ -82,6 +91,10 @@ Vue.createApp({
             tbody.innerHTML = '';
             this.locations.forEach((loc, index) => {
                 const row = document.createElement('tr');
+                if (loc.id === this.markerId) {
+                    row.classList.add('table-primary');
+                }
+                loc.id = this.markerId;
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
                     <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
