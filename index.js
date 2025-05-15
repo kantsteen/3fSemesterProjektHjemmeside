@@ -69,7 +69,7 @@ Vue.createApp({
 
                 if (index === 0) {
                     this.latestMarker = marker;
-                    this.map.setView([loc.latitude, loc.longitude], 13);
+                    this.map.setView([loc.latitude, loc.longitude], 17);
                 } else {
                     this.oldMarkers.push(marker);
                 }
