@@ -5,7 +5,10 @@ Vue.createApp({
             latestMarker: null,
             oldMarkers: [],
             locations: [],
-            userLocationMarker: null
+            userLocationMarker: null,
+            buffer: [],
+            fetchIntervalId: null,
+            displayIntervalId: null
         };
     },
     mounted() {
@@ -15,51 +18,69 @@ Vue.createApp({
             attribution: '© OpenStreetMap contributors'
         }).addTo(this.map);
 
-        this.fetchLocations();
-        setInterval(this.fetchLocations, 30000); // Opdaterer hvert 30. sekund, kunde valgt
+        // Fetch newest location every 5 seconds
+        this.fetchIntervalId = setInterval(this.bufferFetchLocation, 5000);
+
+        // Display newest fetched location every 30 seconds
+        this.displayIntervalId = setInterval(this.displayLatestBufferedLocation, 30000)
 
         this.getUserLocation();
     },
+    beforeUnmount() {
+        clearInterval(this.fetchIntervalId);
+        clearInterval(this.displayIntervalId);
+    },
     methods: {
-        async fetchLocations() {
+        async bufferFetchLocation() {
             try {
                 const response = await fetch('https://restredning20250504122455.azurewebsites.net/api/GPS'); // Rettes til vores rigtige endpoint
                 const data = await response.json();
-                this.locations = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sorter efter timestamp
 
-                // Fjern gamle markører
-                this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
-                this.oldMarkers = [];
-
-                const limitedData = this.locations.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
-
-                limitedData.forEach((loc, index) => {
-                    const opacity = 0.7 - (index * 0.07); // Ændrer opacitet for ældre markører
-                    const marker = L.circleMarker([loc.latitude, loc.longitude], {
-                        radius: 6,
-                        color: index === 0 ? 'red' : 'gray', // nyeste = rød, andre = grå
-                        fillOpacity: 0.7 === 0 ? 0.7 : Math.max(opacity, 0.1) // mindst 0.1
-                    }).addTo(this.map);
-
-                    if (index > 0) this.oldMarkers.push(marker);
-                    else {
-                        this.latestMarker = marker;
-                        this.map.setView([loc.latitude, loc.longitude], 13);
-                    }
-                });
-
-                this.updateTable();
+                const latest = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
+                if (latest) {
+                    this.buffer.push(latest)
+                }
             } catch (error) {
                 console.error('Fejl ved hentning af lokationer:', error);
             }
         },
+        displayLatestBufferedLocation() {
+            if (this.buffer.length === 0) return;
+            const latest = this.buffer[this.buffer.length - 1];
+
+            this.locations.unshift(latest);
+            this.locations = this.locations.slice(0, 10);
+            this.buffer = [];
+            this.updateMarkers();
+            this.updateTable();
+        },
+        updateMarkers() {
+            // Remove old markers
+            this.oldMarkers.forEach(marker => this.map.removeLayer(marker));
+            if (this.latestMarker) this.map.removeLayer(this.latestMarker);
+            this.oldMarkers = [];
+
+            this.locations.forEach((loc, index) => {
+                const marker = L.circleMarker([loc.latitude, loc.longitude], {
+                    radius: 6,
+                    color: index === 0 ? 'red' : 'gray',
+                    fillOpacity: index === 0 ? 0.7 : 0.4
+                }).addTo(this.map);
+
+                if (index === 0) {
+                    this.latestMarker = marker;
+                    this.map.setView([loc.latitude, loc.longitude], 13);
+                } else {
+                    this.oldMarkers.push(marker);
+                }
+            });
+
+        },
+
         updateTable() {
             const tbody = document.querySelector('tbody');
             tbody.innerHTML = '';
-
-            const limitedLocations = this.locations.slice(0, 10); // Begræns til de seneste 10 lokationer, kunde valgt
-
-            limitedLocations.forEach((loc, index) => {
+            this.locations.forEach((loc, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
@@ -126,6 +147,7 @@ Vue.createApp({
                     break;
             }
             console.error(message, error);
-        }    
+        }
     }
-}).mount('#app');
+}
+).mount('#app');
