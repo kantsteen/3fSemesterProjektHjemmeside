@@ -10,25 +10,35 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <link rel="stylesheet" href="index.css">
         <title>3fSemesterProjekt</title>
     
     </head>
 <body>
 
-    <div id="app">
+    <div id="app" class="container">
         <nav class="navbar navbar-expand-md navbar-light bg-light custom-navbar">
-            <a class="navbar-brand custom-brand ms-3" href="#">Coast</a>
+          <a class="navbar-brand custom-brand ms-3" href="#">Coast</a>
         </nav>
-
-        <div class="col-8 mx-auto">
-            <h3 class="text-center">Kort over hændelser</h3>
-            <div id="map" style="height: 600px;"></div>
+      
+        <div class="row my-4">
+          <div class="col-md-4">
+            <label for="startTime">Fra tidspunkt:</label>
+            <input type="datetime-local" v-model="startTime" id="startTime" class="form-control" />
+          </div>
+          <div class="col-md-4">
+            <label for="endTime">Til tidspunkt:</label>
+            <input type="datetime-local" v-model="endTime" id="endTime" class="form-control" />
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button class="btn btn-primary w-100" @click="filterByTime">Søg</button>
+          </div>
         </div>
-
-
-
-    </div>
+      
+        <div id="map" style="height: 600px;"></div>
+      </div>
+      
 
 
 
