@@ -11,7 +11,7 @@ const app = Vue.createApp({
     methods: {
       async fetchGPSData() {
         try {
-          const response = await axios.get("https://restredning20250504122455.azurewebsites.net/api/GPS");
+          const response = await axios.get("https://restredning20250504122455.azurewebsites.net/api/GPSNew");
           this.gpsData = response.data;
           this.plotMarkers(this.gpsData);
         } catch (error) {
