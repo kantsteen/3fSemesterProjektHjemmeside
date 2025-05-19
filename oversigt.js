@@ -23,7 +23,7 @@ const app = Vue.createApp({
           this.map.removeLayer(this.markerGroup);
         }
   
-        this.markerGroup = L.layerGroup();
+        this.markerGroup = L.featureGroup();
   
         data.forEach(point => {
           const marker = L.marker([point.latitude, point.longitude])
