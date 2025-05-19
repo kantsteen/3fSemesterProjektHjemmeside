@@ -93,7 +93,7 @@ Vue.createApp({
                 }
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
-                    <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
+                    <td>${new Date(loc.timestamp).toLocaleTimeString('da-DK',{timeZone:'Europe/Samara'})}</td>
                     <td>${loc.latitude.toFixed(5)}</td>
                     <td>${loc.longitude.toFixed(5)}</td>
                     <td>${loc.speedKnots.toFixed(1)}</td>
