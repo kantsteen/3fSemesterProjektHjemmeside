@@ -9,7 +9,6 @@ Vue.createApp({
             buffer: [],
             fetchIntervalId: null,
             displayIntervalId: null,
-            selectedMarker: null,
             id: null
         };
     },
@@ -40,9 +39,7 @@ Vue.createApp({
 
                 const latest = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
                 if (latest) {
-                    
-                latest.id = `${latest.timestamp}`;
-                    
+                                        
                 this.buffer.push(latest)
                 }
             } catch (error) {
