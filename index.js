@@ -35,7 +35,7 @@ Vue.createApp({
     methods: {
         async bufferFetchLocation() {
             try {
-                const response = await fetch('https://restredning20250504122455.azurewebsites.net/api/GPS'); // Rettes til vores rigtige endpoint
+                const response = await fetch('https://restredning20250504122455.azurewebsites.net/api/GPSNew'); // Rettes til vores rigtige endpoint
                 const data = await response.json();
 
                 const latest = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))[0];
