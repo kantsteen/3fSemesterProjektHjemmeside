@@ -72,7 +72,7 @@ Vue.createApp({
                     fillOpacity: index === 0 ? 0.7 : 0.4
                 }).addTo(this.map).bindPopup(`Id: ${loc.id}<br>Time: ${new Date(loc.timestamp).toLocaleTimeString()}`)
                 .on('click', () => {
-                    this.markerId = loc.id;
+                    this.markerId = loc.primaryKey;
                     this.updateTable();
                 });
 
@@ -91,10 +91,9 @@ Vue.createApp({
             tbody.innerHTML = '';
             this.locations.forEach((loc, index) => {
                 const row = document.createElement('tr');
-                if (loc.id === this.markerId) {
+                if (loc.primaryKey === this.markerId) {
                     row.classList.add('table-primary');
                 }
-                loc.id = this.markerId;
                 row.innerHTML = `
                     <th scope="row">${loc.id}</th>
                     <td>${new Date(loc.timestamp).toLocaleTimeString()}</td>
