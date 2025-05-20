@@ -29,7 +29,7 @@ const app = Vue.createApp({
         data.forEach(point => {
           const marker = L.marker([point.latitude, point.longitude])
             .bindPopup(`
-              <strong>Tidspunkt:</strong> ${new Date(point.timestamp).toLocaleString()}<br>
+              <strong>Tidspunkt:</strong> ${new Date(point.timestamp).toLocaleString('da-DK', { timeZone: 'Europe/samara' })}<br>
               <strong>Fart:</strong> ${point.speedKnots} knob
             `);
           this.markerGroup.addLayer(marker);
