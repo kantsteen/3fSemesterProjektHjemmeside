@@ -23,7 +23,7 @@ Vue.createApp({
         this.fetchIntervalId = setInterval(this.bufferFetchLocation, 5000);
 
         // Display newest fetched location every 30 seconds
-        this.displayIntervalId = setInterval(this.displayLatestBufferedLocation, 1000)
+        this.displayIntervalId = setInterval(this.displayLatestBufferedLocation, 30000)
 
         this.getUserLocation();
     },
