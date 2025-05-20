@@ -88,6 +88,9 @@ const app = Vue.createApp({
           default:
             return;
         }
+
+
+
       
         const filtered = this.gpsData.filter(point => {
           const time = new Date(point.timestamp);
