@@ -122,3 +122,4 @@ const app = Vue.createApp({
   });
   
   app.mount("#app");
+window.vueApp = appInstance; // <-- expose it
