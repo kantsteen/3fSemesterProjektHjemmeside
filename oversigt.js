@@ -125,4 +125,4 @@ const app = Vue.createApp({
   });
   
 const appInstance = app.mount("#app");
-window.vueApp = appInstance; // ✅ NOW vueApp is correctly exposed
+window.vueApp = appInstance; 
