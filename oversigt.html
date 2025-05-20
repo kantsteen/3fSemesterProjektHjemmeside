@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
           <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
-          <span style="font-weight: bold;">Coast</span>
+          <span id="logo_button" style="font-weight: bold;">Coast</span>
         </a>
   
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -34,7 +34,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active text-white fw-semibold" href="index.html">Forside</a>
+              <a id="main_page_button" class="nav-link active text-white fw-semibold" href="index.html">Forside</a>
             </li>
           </ul>
         </div>
@@ -43,28 +43,28 @@
 
     <div class="row my-4 g-3 align-items-end">
       <div class="col-md-3">
-        <label for="filterType" class="form-label mb-1">Vælg periode:</label>
+        <label id="choose_period_button" for="filterType" class="form-label mb-1">Vælg periode:</label>
         <select v-model="selectedPeriod" @change="filterByPeriod" class="form-select">
           <option value="" disabled selected hidden>Vælg</option>
-          <option value="day">Seneste døgn</option>
-          <option value="week">Seneste uge</option>
-          <option value="month">Seneste måned</option>
-          <option value="year">Seneste år</option>
+          <option id="past_day_option" value="day">Seneste døgn</option>
+          <option id="past_week_option" value="week">Seneste uge</option>
+          <option id="past_month_option" value="month">Seneste måned</option>
+          <option id="past_year_option" value="year">Seneste år</option>
         </select>
       </div>
     
       <div class="col-md-3">
-        <label for="startTime" class="form-label mb-1">Fra tidspunkt:</label>
-        <input type="datetime-local" v-model="startTime" id="startTime" class="form-control" />
+        <label id="from_date_button" for="startTime" class="form-label mb-1">Fra tidspunkt:</label>
+        <input id="from_date_input" type="datetime-local" v-model="startTime" id="startTime" class="form-control" />
       </div>
     
       <div class="col-md-3">
-        <label for="endTime" class="form-label mb-1">Til tidspunkt:</label>
-        <input type="datetime-local" v-model="endTime" id="endTime" class="form-control" />
+        <label id="to_date_button" for="endTime" class="form-label mb-1">Til tidspunkt:</label>
+        <input id="to_date_input" type="datetime-local" v-model="endTime" id="endTime" class="form-control" />
       </div>
     
       <div class="col-md-3 d-grid">
-        <button class="btn btn-primary" @click="filterByTime">Søg</button>
+        <button id="search_button" class="btn btn-primary" @click="filterByTime">Søg</button>
       </div>
     </div>
     
