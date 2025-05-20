@@ -42,7 +42,35 @@ select {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.table th, .table td {
+  vertical-align: middle;
+  font-size: 1.05rem;
+}
 
+.card {
+  border-radius: 18px;
+  /*box-shadow: 0 6px 24px rgba(0,0,0,0.10);*/
+  border: none;
+}
+
+.card-header {
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  font-size: 1.3rem;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+  font-size: 1.05rem;
+}
+
+.table thead th {
+  background: linear-gradient(90deg, #3594fa 70%, #3594fa 100%);
+  color: white;
+  border-bottom: none;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 
 
 
