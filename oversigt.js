@@ -5,7 +5,8 @@ const app = Vue.createApp({
         map: null,
         markerGroup: null,
         startTime: '',
-        endTime: ''
+        endTime: '',
+        selectedPeriod: '',
       };
     },
     methods: {

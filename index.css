@@ -34,11 +34,13 @@
 }
 
 select {
-  padding: 5px 10px;
-  margin: 10px;
   border-radius: 5px;
 }
 
+.navbar {
+  background: linear-gradient(90deg, #007BFF, #0056b3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
 
 
